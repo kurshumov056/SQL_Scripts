@@ -1,0 +1,315 @@
+          
+          
+          
+          
+          
+          
+          
+          
+          
+                                                                        SQLZOO practice Solution Scripts
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+
+SELECT statements from WORLD db:
+
+SELECT name,
+       CASE WHEN continent='Oceania' THEN 'Australasia'
+            ELSE continent END
+  FROM world
+ WHERE name LIKE 'N%'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name,
+       CASE WHEN continent='Europe' or continent='Asia' THEN 'Eurasia'
+            WHEN continent in ('North America','South America','Caribbean') THEN 'America'   
+            ELSE continent END
+  FROM world
+ WHERE name LIKE 'A%' or name LIKE 'B%'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, continent, CASE
+                     WHEN continent = 'Oceania' THEN 'Australasia'
+                     WHEN continent = 'Eurasia' THEN 'Europe/Asia'
+                     WHEN name = 'Turkey' THEN 'Europe/Asia'
+    WHEN continent = 'Caribbean' AND name LIKE 'B%' then 'North America'
+    WHEN continent = 'Caribbean' THEN 'South America'    
+                 ELSE continent END
+FROM world ORDER BY name
+SELECT statements from NOBEL db
+
+SELECT * FROM nobel
+  WHERE winner = 'Peter Grünberg'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT * FROM nobel
+  WHERE winner = 'Eugene O''Neill'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT winner, yr, subject FROM nobel
+  WHERE winner LIKE 'Sir %'
+  ORDER BY yr DESC, winner
+#-----------------------------------------------------------------------------------------------------------#
+SELECT winner, subject
+  FROM nobel
+ WHERE yr=1984
+ ORDER BY subject in ('Chemistry','Physics'), subject, winner
+SUBQUERRIES
+
+SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name FROM world
+  WHERE continent = 'Europe'
+    AND gdp/population > (SELECT gdp/population
+                            FROM world
+                           WHERE name = 'United Kingdom')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, continent FROM world
+  WHERE continent IN (SELECT continent FROM world
+                        WHERE name IN ('Argentina','Australia'))
+  ORDER BY name
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, population FROM world
+  WHERE population > (SELECT population FROM world
+                        WHERE name = 'Canada')
+    AND population < (SELECT population FROM world
+                        WHERE name = 'Poland')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, CONCAT(ROUND(population/(SELECT population FROM world
+                          WHERE name = 'Germany')*100,0),'%')
+             FROM world WHERE continent = 'Europe'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name FROM world
+  WHERE gdp > ALL(SELECT gdp FROM world
+                   WHERE gdp > 0 AND continent = 'Europe')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT continent, name, area FROM world x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND area>0)
+          
+          
+---------
+| JOINS |
+|       |
+---------      
+
+
+SELECT DISTINCT player
+  FROM game JOIN goal ON matchid = id
+    WHERE (team1= 'GER' OR team2='GER')
+    AND teamid != 'GER'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teamname, COUNT(*)
+  FROM eteam JOIN goal ON id=teamid
+ GROUP BY teamname
+ 
+#-----------------------------------------------------------------------------------------------------------#
+
+
+
+SELECT matchid, mdate, COUNT(*)
+  FROM game JOIN goal ON matchid = id
+  WHERE (team1 = 'POL' OR team2 = 'POL')
+  GROUP BY mdate,matchid
+#-----------------------------------------------------------------------------------------------------------#
+SELECT matchid, mdate, COUNT(*) FROM goal
+  JOIN game ON (matchid=id)
+  WHERE teamid = 'GER'
+  GROUP BY matchid, mdate
+#-----------------------------------------------------------------------------------------------------------#
+
+SELECT DISTINCT mdate, team1,
+	SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) score1,
+    team2,
+    SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) score2
+FROM game
+LEFT JOIN goal ON game.id = goal.matchid
+GROUP BY id, mdate, team1, team2
+ORDER BY mdate, matchid, team1, team2
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name FROM casting
+  JOIN actor ON (actor.id=actorid)
+  JOIN movie ON (movie.id=movieid)
+  WHERE title = 'Alien'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT title FROM casting
+  JOIN movie ON (movie.id = movieid)
+  JOIN actor ON (actor.id = actorid)
+  WHERE name = 'Harrison Ford'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT title FROM casting
+  JOIN movie ON (movie.id = movieid)
+  JOIN actor ON (actor.id = actorid)
+  WHERE name = 'Harrison Ford'  AND ord > 1
+#-----------------------------------------------------------------------------------------------------------#
+SELECT title, name FROM casting
+  JOIN movie ON (movie.id = movieid)
+  JOIN actor ON (actor.id = actorid)
+  WHERE yr = 1962 and ord = 1
+
+#-----------------------------------------------------------------------------------------------------------#
+SELECT yr,COUNT(title) FROM
+  movie JOIN casting ON movie.id=movieid
+         JOIN actor   ON actorid=actor.id
+WHERE name='John Travolta'
+GROUP BY yr
+HAVING COUNT(title)=(SELECT MAX(c) FROM
+(SELECT yr,COUNT(title) AS c FROM
+   movie JOIN casting ON movie.id=movieid
+         JOIN actor   ON actorid=actor.id
+ WHERE name='John Travolta'
+ GROUP BY yr) AS t
+)
+#-----------------------------------------------------------------------------------------------------------#
+SELECT title, name FROM casting
+  JOIN movie ON movie.id = movieid
+  JOIN actor ON actor.id = actorid
+WHERE ord = 1
+	AND movie.id IN
+	(SELECT movie.id FROM movie
+	   JOIN casting ON movie.id = movieid
+	   JOIN actor ON actor.id = actorid
+           WHERE actor.name = 'Julie Andrews')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT DISTINCT name FROM casting
+  JOIN movie ON movie.id = movieid
+  JOIN actor ON actor.id = actorid
+  WHERE actorid IN (
+	SELECT actorid FROM casting
+	  WHERE ord = 1
+	  GROUP BY actorid
+	  HAVING COUNT(actorid) >= 30)
+ORDER BY name
+#-----------------------------------------------------------------------------------------------------------#
+SELECT title, COUNT(actorid) FROM casting
+  JOIN movie ON movieid = movie.id
+  WHERE yr = 1978
+  GROUP BY movieid, title
+  ORDER BY COUNT(actorid) DESC
+#-----------------------------------------------------------------------------------------------------------#
+SELECT DISTINCT name FROM casting
+  JOIN actor ON actorid = actor.id
+  WHERE name != 'Art Garfunkel'
+	AND movieid IN (
+		SELECT movieid
+		FROM movie
+		JOIN casting ON movieid = movie.id
+		JOIN actor ON actorid = actor.id
+		WHERE actor.name = 'Art Garfunkel'
+)
+Using NULL
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name FROM teacher
+  WHERE dept IS NULL
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teacher.name, dept.name
+ FROM teacher INNER JOIN dept
+           ON (teacher.dept=dept.id)
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teacher.name, dept.name
+ FROM teacher LEFT JOIN dept
+           ON (teacher.dept=dept.id)
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teacher.name, dept.name
+ FROM teacher RIGHT JOIN dept
+           ON (teacher.dept=dept.id)
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teacher.name, COALESCE(teacher.mobile,'07986 444 2266')  FROM teacher
+#-----------------------------------------------------------------------------------------------------------#
+SELECT teacher.name, COALESCE(dept.name,'None') FROM teacher
+  LEFT JOIN dept ON teacher.dept = dept.id
+#-----------------------------------------------------------------------------------------------------------#
+SELECT dept.name, COUNT(teacher.dept) FROM teacher
+  RIGHT JOIN dept ON dept.id = teacher.dept
+  GROUP BY dept.name
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, CASE WHEN dept IN (1,2) THEN 'Sci'
+                  ELSE 'Art'
+                  END
+                  FROM teacher
+#-----------------------------------------------------------------------------------------------------------#
+SELECT name, CASE WHEN dept IN (1,2) THEN 'Sci'
+                  WHEN dept = 3 THEN 'Art'
+                  ELSE 'None'
+                  END
+                  FROM teacher
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+Self JOIN
+ 
+ 
+ 
+ 
+ 
+ 
+SELECT DISTINCT COUNT(*) FROM stops
+#-----------------------------------------------------------------------------------------------------------#
+SELECT id FROM stops
+  WHERE name = 'Craiglockhart'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT id, name FROM stops JOIN route ON (stops.id = route.stop)
+  WHERE num = 4
+#-----------------------------------------------------------------------------------------------------------#
+SELECT company, num, COUNT(*)
+FROM route WHERE stop=149 OR stop=53
+GROUP BY company, num
+HAVING COUNT(*) = 2
+#-----------------------------------------------------------------------------------------------------------#
+SELECT a.company, a.num, a.stop, b.stop
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+WHERE a.stop=53 AND b.stop = (SELECT id FROM stops WHERE name = 'London Road')
+#-----------------------------------------------------------------------------------------------------------#
+SELECT a.company, a.num, stopa.name, stopb.name
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+  JOIN stops stopa ON (a.stop=stopa.id)
+  JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name='Craiglockhart' and stopb.name = 'London Road'
+#-----------------------------------------------------------------------------------------------------------#
+SELECT a.company, a.num  
+FROM route a, route b
+WHERE a.num = b.num AND (a.stop = 115 AND b.stop = 137)
+GROUP BY num;
+#-----------------------------------------------------------------------------------------------------------#
+SELECT a.company, a.num
+FROM route a
+JOIN route b ON (a.company = b.company AND a.num = b.num)
+JOIN stops stopa ON a.stop = stopa.id
+JOIN stops stopb ON b.stop = stopb.id
+WHERE stopa.name = 'Craiglockhart'
+AND stopb.name = 'Tollcross';
+#-----------------------------------------------------------------------------------------------------------#
+SELECT DISTINCT name, a.company, a.num
+FROM route a
+JOIN route b ON (a.company = b.company AND a.num = b.num)
+JOIN stops ON a.stop = stops.id
+WHERE b.stop = 53;
+#-----------------------------------------------------------------------------------------------------------#
+SELECT a.num, a.company, stopb.name, c.num, c.company
+FROM route a
+JOIN route b ON (a.company = b.company AND a.num = b.num)
+JOIN (route c JOIN route d ON (c.company = d.company AND c.num = d.num))
+JOIN stops stopa ON a.stop = stopa.id
+JOIN stops stopb ON b.stop = stopb.id
+JOIN stops stopc ON c.stop = stopc.id
+JOIN stops stopd ON d.stop = stopd.id
+WHERE stopa.name = 'Craiglockhart'
+	AND stopd.name = 'Sighthill'
+	AND stopb.name = stopc.name
+ORDER BY LENGTH(a.num), b.num, stopb.name, LENGTH(c.num), d.num;
