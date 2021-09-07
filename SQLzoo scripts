@@ -19,6 +19,7 @@ There is a table called world with nearly 200 records.
 The first record is Afghanistan in Asia
 The final record is Zimbabwe in Africa.
 The table has eight columns or attributes . These are:
+
 Field	Type	Null	Key	Default	Notes
 name	varchar(50)	The English name of the country - this is the primary key.
 continent	varchar(60)	Not strictloy continent - but these include all your favourite continents (Europe, Asia etc) plus a few others.
