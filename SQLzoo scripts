@@ -1,5 +1,5 @@
           
-          
+                                                                       
           
           
           
@@ -12,12 +12,49 @@
                                                                         
                                                                         
                                                                         
+                  The world table.
+Some points to note:
+
+There is a table called world with nearly 200 records.
+The first record is Afghanistan in Asia
+The final record is Zimbabwe in Africa.
+The table has eight columns or attributes . These are:
+Field	Type	Null	Key	Default	Notes
+name	varchar(50)	The English name of the country - this is the primary key.
+continent	varchar(60)	Not strictloy continent - but these include all your favourite continents (Europe, Asia etc) plus a few others.
+area	decimal(10,0)	YES		null	
+population	decimal(11,0)	YES		null	
+gdp	decimal(14,0)	YES		null	
+capital	varchar(60)	YES		null	
+tld	varchar(5)	YES		null	
+flag	varchar(255)	YES		null	
+An extract from the table world
+name	region	area	population	gdp
+Yemen	Middle East	536869	21500000	12255000000
+Zambia	Africa	752614	11000000	4950000000
+Zimbabwe	Africa	390759	12900000	6192000000
+Footnotes
+Per Capita GDP
+The per capita GDP is the GDP divided by the population. It is a rough measure of the average salary. A rich country is one with a high per capita GDP.
+
+Original source
+This data has been collected from http://www.wikidata.org - it may be a little out of date. The latest version can be found at Some changes have been made to the data - the reader should assume that errors and omissions are due to me and not the most excellent wikidata site.
+
+Area
+The area is measured in square kilometers.
+
+GDP
+
+Scientific Notation
+Some implementations of SQL may show large numbers in scientific notation. The number 6.23 E9 means 6.23 x 10 9 which is 6.23 x 1,000,000,000 which is 6,230,000,000
+A Million is 10 6 which is 1,000,000
+A Billion is 10 9 which is one thousand million which is 1,000,000,000
+A Trillion is 10 12 , which is one million million which is 1,000,000,000,000.                                                      
                                                                         
                                                                         
                                                                         
                                                                         
-                                                                        
-                                                                        
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                    
                                                                         
 
 SELECT statements from WORLD db:
