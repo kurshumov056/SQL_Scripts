@@ -79,3 +79,9 @@ AND country.headofstate = 'Elisabeth II' AND country.name <> 'United Kingdom'
 % of English speaking population of Commonwealth member states 
 *Excluding the UK
 */
+
+SELECT country.name, countrylanguage.percentage AS "english_speaking_pop" FROM 
+country JOIN countrylanguage ON country.code = countrylanguage.countrycode
+WHERE countrylanguage.language = 'English'
+AND country.headofstate = 'Elisabeth II' 
+ORDER BY english_speaking_pop Desc
