@@ -1,0 +1,81 @@
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                         
+                                         
+                                         
+                                         
+                                                            BRITISH COMMONWEALTH MEMBER-STATE ANALYSIS
+
+
+TABLE 1 
+COUNTRY        COLUMNS: code,name, continent, regionn,surfacearea,indepyear,population,lifeexpectancy,
+gnp,gnpold,localname,governmaentform,headofstate,capital,code                  
+
+
+TABLE 2
+CITY    COLUMNS: id,name,countrycode,district,population                    
+
+
+
+Table 3
+COUNTRYLANGUAGE  COLUMNS: countrycode, language, isofficial, percentage
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+Current nationstates part of the British Commonwealth excluding the United Kigndom
+*/
+
+SELECT name
+FROM country
+WHERE  headofstate = 'Elisabeth II' AND name <> 'United Kingdom'
+
+
+
+
+
+/*
+Total number of member states part of the British Constitutional monarchy that accept the British monarch as its own 
+*Including the UK
+*/
+
+SELECT COUNT(name)
+FROM country
+WHERE  headofstate = 'Elisabeth II' 
+
+
+
+
+
+/*
+Number of Commonwealth member states that have voted the English language as official
+*Excluding the UK
+*/
+ 
+SELECT COUNT(country.name) FROM 
+country JOIN countrylanguage ON country.code = countrylanguage.countrycode
+WHERE countrylanguage.language = 'English'
+AND country.headofstate = 'Elisabeth II' AND country.name <> 'United Kingdom'
+AND countrylanguage.isofficial = 'T'
+
+
+
+
+
+/*
+Number of Commonwealth member states that have an English speaking population
+*Excluding the United Kingdom
+*/
+
+SELECT country.name FROM 
+country JOIN countrylanguage ON country.code = countrylanguage.countrycode
+WHERE countrylanguage.language = 'English'
+AND country.headofstate = 'Elisabeth II' AND country.name <> 'United Kingdom'
+
+
+/*
+% of English speaking population of Commonwealth member states 
+*Excluding the UK
+*/
