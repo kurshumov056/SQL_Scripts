@@ -70,4 +70,17 @@ ORDER BY country.name, city.population
 	WHERE city.population > 1000000
 	GROUP BY country.name
 	ORDER BY "Number of cities with +1mill population" DESC
+	
+	
+	
+	
+	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+				/* Lowest AVG expectancy by Region */
+				
+SELECT region, ROUND(AVG(lifeexpectancy),1) AS life_expectancy
+FROM country  
+GROUP BY region
+ORDER BY  life_expectancy
 
