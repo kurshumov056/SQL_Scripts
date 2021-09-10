@@ -1,0 +1,74 @@
+
+SELECT * FROM city
+SELECT * FROM country 
+SELECT * FROM countrylanguage
+
+
+/* 
+Count of cities aliased medium sized, large etc
+*/
+
+city.countrycode country.code
+
+
+
+SELECT  country.name, city.name, city.population
+FROM country JOIN city ON (country.code = city.countrycode) LIKE
+
+CASE
+		WHEN city.population  BETWEEN 0 AND 4999 THEN '1 - 5K'
+		WHEN city.population BETWEEN 5000 AND 35000 THEN '5K - 35K'
+		WHEN city.population BETWEEN 35001 AND 85000 THEN '35K - 85K'
+		WHEN city.population BETWEEN 85001 AND 250000 THEN '85K - 250K'
+		WHEN city.population BETWEEN 250001 AND 750000 THEN '250K - 750K'
+		ELSE 'Over 1 million'
+END
+ 
+ 
+ ------------------------------------------------------------------------
+ 
+ city.countrycode country.code
+WITH (
+SELECT  country.name, city.name
+FROM country JOIN city ON (country.code = city.countrycode))
+
+CASE
+	WHEN city.population IN (city.population BETWEEN 1 AND 4999)
+	AND city.population IN (city.population BETWEEN 5000 AND 35000)
+	AND city.population IN (city.population BETWEEN 35001 AND 85000)
+	AND city.population IN (city.population BETWEEN 85001 AND 250000)
+	AND city.population IN (city.population BETWEEN 250001 AND 750000)
+ city.population >= 1000000
+
+
+
+
+
+
+
+
+
+
+/*
+
+COUNT of regions with cosmopolitan cities grouped by order count
+
+#TRANSITION FROM POPULATION SIZE TO LIFE EXPECTANCY RELATIONSHIP
+ESTIMATE RELATIONSHIP BETWEEN FORM OF GOVERNMENT AND life expectancy   
+ 
+
+
+#TRANSITION FROM CITY TO GNP RELATIONSHIP
+MAKE COMPARRISON between count of major cities in region and region gnp (estimate both)
+
+
+
+
+
+
+
+
+
+
+
+
