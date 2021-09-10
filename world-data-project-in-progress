@@ -84,3 +84,11 @@ FROM country
 GROUP BY region
 ORDER BY  life_expectancy
 
+
+			/* Countries AVG life expectancy with a +100 million population */
+				
+SELECT name, ROUND(AVG(lifeexpectancy),1) AS life_expectancy
+FROM country  
+WHERE population > 100000000
+GROUP BY name
+ORDER BY  life_expectancy DESC
