@@ -92,3 +92,13 @@ FROM country
 WHERE population > 100000000
 GROUP BY name
 ORDER BY  life_expectancy DESC
+
+
+
+				/* AVG life expectancy by form of government */
+				
+SELECT governmentform AS "Form of government", ROUND(AVG(lifeexpectancy),1) AS life_expectancy
+FROM country
+WHERE lifeexpectancy IS NOT NULL
+GROUP BY governmentform
+ORDER BY  life_expectancy DESC
