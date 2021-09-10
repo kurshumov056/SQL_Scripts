@@ -1,0 +1,73 @@
+
+SELECT * FROM city
+SELECT * FROM country 
+SELECT * FROM countrylanguage
+
+
+/* 
+Count of cities aliased medium sized, large etc
+*/
+
+SELECT  country.name, city.name,
+CASE
+		WHEN city.population BETWEEN 1 AND 4999 THEN '1 - 5K'
+		WHEN city.population BETWEEN 5000 AND 35000 THEN '5K - 35K'
+		WHEN city.population BETWEEN 35001 AND 85000 THEN '35K - 85K'
+		WHEN city.population BETWEEN 85001 AND 250000 THEN '85K - 250K'
+		WHEN city.population BETWEEN 250001 AND 750000 THEN '250K - 750K'
+		ELSE 'Over 1 million'
+END AS "Population Size Range"
+FROM country JOIN city ON (country.code = city.countrycode)   
+ORDER BY country.name, city.population
+ 
+ ------------------------------------------------------------------------
+ 
+ 
+/*
+
+					COUNT of regions with cosmopolitan cities grouped by order count
+*/
+
+						
+						
+						
+						/* Small town count */
+
+	SELECT country.name, COUNT(country.name) AS "Number of Small Towns"
+	FROM country JOIN city ON (country.code = city.countrycode) 
+	WHERE city.population BETWEEN 0 AND 85000
+	GROUP BY country.name
+	ORDER BY "Number of Small Towns" DESC
+	
+	
+	
+	  			/* Medium-sized town count */
+				
+	SELECT country.name, COUNT(country.name) AS "Number of Medium-sized Towns"
+	FROM country JOIN city ON (country.code = city.countrycode) 
+	WHERE city.population BETWEEN 85001 AND 250000
+	GROUP BY country.name
+	ORDER BY "Number of Medium-sized Towns" DESC
+	
+	
+	
+	
+					/* Large Town count */
+	
+	SELECT country.name, COUNT(country.name) AS "Number of Large Towns"
+	FROM country JOIN city ON (country.code = city.countrycode) 
+	WHERE city.population BETWEEN 250001 AND 1000000
+	GROUP BY country.name
+	ORDER BY "Number of Large Towns" DESC
+	
+	
+	
+	
+			 	/* +1 million City population count */
+	
+	SELECT country.name, COUNT(country.name) AS "Number of cities with +1mill population"
+	FROM country JOIN city ON (country.code = city.countrycode) 
+	WHERE city.population > 1000000
+	GROUP BY country.name
+	ORDER BY "Number of cities with +1mill population" DESC
+
